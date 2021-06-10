@@ -3,36 +3,40 @@ package com.swpu.linked.singlelist;
 import java.util.Scanner;
 
 /**
- * 基于链表的LRU算法
+ * 基于单链表的LRU算法
  *
  * @author: Lemon-Fruit
  * @date: 2021/6/5 23:00
  */
 public class LRUBaseLinkedList<T> {
-    //默认容量
+
+    /**
+     * 默认链表容量
+     */
     private final static Integer DEFAULT_CAPACITY = 10;
 
-    //头结点
+    /**
+     * 头结点
+     */
     private SNode<T> headNode;
 
-    //链表长度
+    /**
+     * 链表长度
+     */
     private Integer length;
 
-    //链表容量
+    /**
+     * 链表容量
+     */
     private Integer capacity;
 
-    /* 懂的都懂
     public LRUBaseLinkedList() {
         this.headNode = new SNode<>();
         this.capacity = DEFAULT_CAPACITY;
         this.length = 0;
-    }*/
-
-    private LRUBaseLinkedList() {
-        this(DEFAULT_CAPACITY);
     }
 
-    private LRUBaseLinkedList(Integer capacity) {
+    public LRUBaseLinkedList(Integer capacity) {
         this.headNode = new SNode<>();
         this.capacity = capacity;
         this.length = 0;
@@ -41,10 +45,12 @@ public class LRUBaseLinkedList<T> {
     public void add(T data) {
         SNode preNode = findPreNode(data);
 
+        // 链表中存在，删除原数据，再插入到链表的头部
         if (preNode != null) {
-            deleteElemOptim(preNode);
+            deleteElemOptima(preNode);
         } else {
             if (length >= this.capacity) {
+                //删除尾结点
                 deleteElemAtEnd();
             }
         }
@@ -54,31 +60,31 @@ public class LRUBaseLinkedList<T> {
     /**
      * 删除preNode结点下一个元素
      *
-     * @param preNode
+     * @param preNode pre
      */
-    public void deleteElemOptim(SNode preNode) {
-        SNode temp = headNode.getNext();
+    private void deleteElemOptima(SNode preNode) {
+        SNode temp = preNode.getNext();
         preNode.setNext(temp.getNext());
         temp = null;
-        --length;
+        length--;
     }
 
     /**
-     * 链表头部插入结点
+     * 链表头部插入节点
      *
-     * @param data
+     * @param data data
      */
-    public void insertElemAtBegin(T data) {
+    private void insertElemAtBegin(T data) {
         SNode next = headNode.getNext();
         headNode.setNext(new SNode(data, next));
-        ++length;
+        length++;
     }
 
     /**
-     * 获取查找到的元素的前一个结点
+     * 获取查找到元素的前一个结点
      *
-     * @param data
-     * @return
+     * @param data data
+     * @return data
      */
     private SNode findPreNode(T data) {
         SNode node = headNode;
@@ -96,10 +102,12 @@ public class LRUBaseLinkedList<T> {
      */
     private void deleteElemAtEnd() {
         SNode ptr = headNode;
+        // 空链表直接返回
         if (ptr.getNext() == null) {
             return;
         }
 
+        // 倒数第二个结点
         while (ptr.getNext().getNext() != null) {
             ptr = ptr.getNext();
         }
@@ -107,7 +115,7 @@ public class LRUBaseLinkedList<T> {
         SNode tmp = ptr.getNext();
         ptr.setNext(null);
         tmp = null;
-        --length;
+        length--;
     }
 
     private void printAll() {
@@ -120,6 +128,7 @@ public class LRUBaseLinkedList<T> {
     }
 
     public class SNode<T> {
+
         private T element;
 
         private SNode next;
@@ -156,9 +165,10 @@ public class LRUBaseLinkedList<T> {
 
     public static void main(String[] args) {
         LRUBaseLinkedList list = new LRUBaseLinkedList();
-        Scanner in = new Scanner(System.in);
-        while (true) {
-            list.add(in.nextInt());
+        Scanner sc = new Scanner(System.in);
+        //不是int型就退出
+        while (sc.hasNextInt()) {
+            list.add(sc.nextInt());
             list.printAll();
         }
     }
