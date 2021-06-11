@@ -18,7 +18,7 @@ public class LRUBaseLinkedList<T> {
     /**
      * 头结点
      */
-    private SNode<T> headNode;
+    private final SNode<T> headNode;
 
     /**
      * 链表长度
@@ -31,9 +31,7 @@ public class LRUBaseLinkedList<T> {
     private Integer capacity;
 
     public LRUBaseLinkedList() {
-        this.headNode = new SNode<>();
-        this.capacity = DEFAULT_CAPACITY;
-        this.length = 0;
+        this(DEFAULT_CAPACITY);
     }
 
     public LRUBaseLinkedList(Integer capacity) {
@@ -47,7 +45,7 @@ public class LRUBaseLinkedList<T> {
 
         // 链表中存在，删除原数据，再插入到链表的头部
         if (preNode != null) {
-            deleteElemOptima(preNode);
+            deleteElemOptima(preNode); //删除preNode结点下一个元素 即data
         } else {
             if (length >= this.capacity) {
                 //删除尾结点
@@ -65,8 +63,7 @@ public class LRUBaseLinkedList<T> {
     private void deleteElemOptima(SNode preNode) {
         SNode temp = preNode.getNext();
         preNode.setNext(temp.getNext());
-        temp = null;
-        length--;
+        --length;
     }
 
     /**
@@ -77,7 +74,7 @@ public class LRUBaseLinkedList<T> {
     private void insertElemAtBegin(T data) {
         SNode next = headNode.getNext();
         headNode.setNext(new SNode(data, next));
-        length++;
+        ++length;
     }
 
     /**
@@ -112,10 +109,8 @@ public class LRUBaseLinkedList<T> {
             ptr = ptr.getNext();
         }
 
-        SNode tmp = ptr.getNext();
         ptr.setNext(null);
-        tmp = null;
-        length--;
+        --length;
     }
 
     private void printAll() {
@@ -128,9 +123,7 @@ public class LRUBaseLinkedList<T> {
     }
 
     public class SNode<T> {
-
         private T element;
-
         private SNode next;
 
         public SNode(T element) {
